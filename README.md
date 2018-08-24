@@ -3,7 +3,7 @@ Dosyaları AES ile şifrelemek ve AES ile şifrelenmiş dosyaları çözmek içi
 
 # Kullanım
 
-[AEScryptor](https://github.com/coderistan/AEScryptor/dist/AEScryptor.jar) jar dosyasını projenize dahil ederek kullanabilirsiniz. Ya da isterseniz konsol üzerinde de çalıştırabilirsiniz. Bunun için;
+[AEScryptor](https://github.com/coderistan/AEScryptor/blob/master/dist/AEScryptor.jar) jar dosyasını projenize dahil ederek kullanabilirsiniz. Ya da isterseniz konsol üzerinde de çalıştırabilirsiniz. Bunun için;
 
 ```
 java -jar AEScryptor.jar ANAHTAR MODE KAYNAK HEDEF
@@ -54,4 +54,6 @@ public class Coderistan{
 }
 ```
 
-Kütüphane normal boyutlu dosyalarda(1 GB altında) gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Faydalı olması dileğiyle :)
+Kütüphane normal boyutlu dosyalarda(1 GB altında) gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Şifrelediğiniz veya çözümlediğiniz dosyayı başka bir isimle kaydetmeniz tavsiye olunur...
+
+Faydalı olması dileğiyle :)
