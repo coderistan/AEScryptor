@@ -54,4 +54,4 @@ public class Coderistan{
 }
 ```
 
-Kütüphane normal boyutlu dosyalarda gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Faydalı olması dileğiyle :)
+Kütüphane normal boyutlu dosyalarda(1 GB altında) gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Faydalı olması dileğiyle :)
