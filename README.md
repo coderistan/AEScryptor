@@ -28,7 +28,7 @@ java -jar AEScryptor null 0 "D:\\Video\\video.mp4" "D:\\sifreli.mp4"
 
 Çözümleme
 ```
-java -jar AEScryptor null 0 "D:\\sifreli.mp4" "D:\\cozulmus.mp4"
+java -jar AEScryptor null 1 "D:\\sifreli.mp4" "D:\\cozulmus.mp4"
 ```
 
 Şifrelerken kullandığınız anahtarı, çözümlerken de kullanmak zorundasınız. Aksi takdirde çözülmeyecektir. Kendi belirlediğiniz şifreyi unutmayın :)
