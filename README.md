@@ -94,6 +94,7 @@ public class Coderistan{
 }
 
 ```
+![How To Work](https://raw.githubusercontent.com/coderistan/AEScryptor/master/how_to_work.gif)
 
 Kütüphane normal boyutlu dosyalarda(1 GB altında) gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Şifrelediğiniz veya çözümlediğiniz dosyayı başka bir isimle kaydetmeniz tavsiye olunur...
 
