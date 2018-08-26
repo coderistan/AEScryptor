@@ -37,7 +37,7 @@ java -jar AEScryptor null 1 "D:\\sifreli.mp4" "D:\\cozulmus.mp4"
 
 Eğer projenize dahil edip kullanmak isterseniz, şu şekilde kullanabilirsiniz
 
-```
+```java
 import org.coderistan.Cryptor;
 import org.coderistan.AESkey;
 
@@ -58,7 +58,7 @@ public class Coderistan{
 
 Şifreleme veya çözümleme işlemi sürerken, işlemin yüzde kaçının tamamlandığını görebiliriz. Bunun için AesListener sınıfını implement etmek yeterlidir. Aynı zamanda başladığında ve işlem bittiğinde de gerekli metotlar yardımı ile haberdar edilirsiniz.
 
-```
+```java
 import org.coderistan.Cryptor;
 import org.coderistan.AESkey;
 import org.coderistan.AesListener;
