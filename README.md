@@ -54,6 +54,47 @@ public class Coderistan{
 }
 ```
 
+# AesListener
+
+Şifreleme veya çözümleme işlemi sürerken, işlemin yüzde kaçının tamamlandığını görebiliriz. Bunun için AesListener sınıfını implement etmek yeterlidir. Aynı zamanda başladığında ve işlem bittiğinde de gerekli metotlar yardımı ile haberdar edilirsiniz.
+
+```
+import org.coderistan.Cryptor;
+import org.coderistan.AESkey;
+import org.coderistan.AesListener;
+
+public class Coderistan{
+    public static void main(String args[]){
+        AESkey key = new AESkey("ANAHTARINIZ");
+        Cryptor c = new Cryptor(key);
+        
+        c.addListener(new AesListener() {
+            @Override
+            public void onStart() {
+                System.out.println("İşlem başladı");
+            }
+
+            @Override
+            public void onWrite(int rate) {
+                System.out.print("\r%"+rate+" tamamlandı");
+            }
+
+            @Override
+            public void onFinish(long endTime) {
+                System.out.println("\n"+(endTime/1000.0)+" saniyede işlem tamamlandı");
+            }
+        });
+        
+        String kaynak = "kaynak";
+        String hedef = "hedef";
+        
+        c.encryptFile(kaynak,hedef); // Şifreleme işlemi
+        c.decryptFile(kaynak,hedef); // Çözümleme işlemi
+    }
+}
+
+```
+
 Kütüphane normal boyutlu dosyalarda(1 GB altında) gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Şifrelediğiniz veya çözümlediğiniz dosyayı başka bir isimle kaydetmeniz tavsiye olunur...
 
 Faydalı olması dileğiyle :)
