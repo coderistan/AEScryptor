@@ -10,11 +10,16 @@ public class AESkey {
     public static String random = "123456789abcdefg";
 
     public AESkey(String key) throws Exception {
-        if (key.length() == 16 || key.length() == 24 || key.length() == 32) {
-            this.secretKey = new SecretKeySpec(key.getBytes(), "AES");
-            this.ivParameterSpec = new IvParameterSpec(this.secretKey.getEncoded());
+        if (key != null) {
+            if (key.length() == 16 || key.length() == 24 || key.length() == 32) {
+                this.secretKey = new SecretKeySpec(key.getBytes(), "AES");
+                this.ivParameterSpec = new IvParameterSpec(this.secretKey.getEncoded());
+            } else {
+                throw new Exception("Anahtar uzunluğu 16,24 veya 32 olmalıdır");
+            }
         }else{
-            throw new Exception("Anahtar uzunluğu 16,24 veya 32 olmalıdır");
+            this.secretKey = new SecretKeySpec(this.random.getBytes(), "AES");
+            this.ivParameterSpec = new IvParameterSpec(this.secretKey.getEncoded());
         }
     }
 
