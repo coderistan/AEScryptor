@@ -3,6 +3,7 @@ package org.coderistan;
 import javax.swing.JOptionPane;
 
 public class main {
+
     public static void main(String[] args) throws Exception {
         if(args.length >= 4){
             String anahtar = (args[0].equalsIgnoreCase("null"))?AESkey.random:args[0];
@@ -45,5 +46,6 @@ public class main {
         }else{
             JOptionPane.showMessageDialog(null,"java -jar AEScryptor AesAnahtar mode KaynakYolu HedefYolu","Hata",JOptionPane.ERROR_MESSAGE);
         }
+
     }
 }

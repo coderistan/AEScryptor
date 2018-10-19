@@ -1,5 +1,7 @@
 package org.coderistan;
 
+import java.security.MessageDigest;
+import java.util.Arrays;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -11,13 +13,15 @@ public class AESkey {
 
     public AESkey(String key) throws Exception {
         if (key != null) {
-            if (key.length() == 16 || key.length() == 24 || key.length() == 32) {
-                this.secretKey = new SecretKeySpec(key.getBytes(), "AES");
-                this.ivParameterSpec = new IvParameterSpec(this.secretKey.getEncoded());
-            } else {
-                throw new Exception("Anahtar uzunluğu 16,24 veya 32 olmalıdır");
-            }
-        }else{
+
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            byte[] shakey = sha.digest(key.getBytes("UTF-8"));
+            shakey = Arrays.copyOf(shakey,16);
+
+            this.secretKey = new SecretKeySpec(shakey, "AES");
+            this.ivParameterSpec = new IvParameterSpec(this.secretKey.getEncoded());
+
+        } else {
             this.secretKey = new SecretKeySpec(this.random.getBytes(), "AES");
             this.ivParameterSpec = new IvParameterSpec(this.secretKey.getEncoded());
         }
