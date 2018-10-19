@@ -9,7 +9,7 @@ Dosyaları AES ile şifrelemek ve AES ile şifrelenmiş dosyaları çözmek içi
 java -jar AEScryptor.jar ANAHTAR MODE KAYNAK HEDEF
 ```
 
-yazmanız yeterlidir. Anahtar uzunluğu 16,24 veya 32 olmalıdır. Eğer null olarak belirtilirse "123456789abcdefg" kullanılacaktır. Tabi ki isterseniz değiştirebilirsiniz. Random olarak belirlenmiştir. 
+yazmanız yeterlidir. Anahtar uzunluğu rastgele seçilebilir. Güvenlik için harf,rakam,noktalama işaretleri,büyük ve küçük karakterlerden oluşan bir şifre oluşturmanız tavsiye edilir. Eğer null olarak belirtilirse "123456789abcdefg" kullanılacaktır. Tabi ki isterseniz değiştirebilirsiniz. Random olarak belirlenmiştir. 
 
 Kaynak dosyasının tam adı verilmelidir.
 
@@ -98,4 +98,4 @@ public class Coderistan{
 
 Kütüphane normal boyutlu dosyalarda(1 GB altında) gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Şifrelediğiniz veya çözümlediğiniz dosyayı başka bir isimle kaydetmeniz tavsiye olunur...
 
-Faydalı olması dileğiyle :)
+Kullanımdan oluşacak aksi durumlardan sorumlu değilim, zira güvenlik önlemleri kullanıcının kendisine aittir. Faydalı olması dileğiyle :)
