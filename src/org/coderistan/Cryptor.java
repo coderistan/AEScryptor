@@ -30,7 +30,7 @@ public class Cryptor {
 
     private AESkey key;
     private AESkey dfault;
-    private byte[] buffer = new byte[2048];
+    private byte[] buffer = new byte[4096];
     private int length;
     private Cipher encryptCipher;
     private AesListener listener = null;
@@ -146,6 +146,7 @@ public class Cryptor {
             
             return true;
         } catch (Exception e) {
+            System.out.println("Hata");
             e.printStackTrace();
             return false;
         }

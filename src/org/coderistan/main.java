@@ -31,11 +31,6 @@ public class main {
                 }
             });
             
-            System.out.println("[KEY] "+anahtar);
-            System.out.println("[MODE] "+mode);
-            System.out.println("[SOURCE] "+kaynak);
-            System.out.println("[TARGET] "+hedef);
-            
             switch(mode){
                 case 0: c.encryptFile(kaynak,hedef);break;
                 case 1: c.decryptFile(kaynak,hedef);break;
@@ -44,7 +39,7 @@ public class main {
             
             
         }else{
-            JOptionPane.showMessageDialog(null,"java -jar AEScryptor AesAnahtar mode KaynakYolu HedefYolu","Hata",JOptionPane.ERROR_MESSAGE);
+            new UserInterface().setVisible(true);
         }
 
     }
