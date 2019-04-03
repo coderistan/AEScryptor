@@ -98,6 +98,8 @@ public class Coderistan{
 
 Bu şekilde terminal ekranından çalıştırmak istemiyorsanız, jar dosyasını parametresiz veya çift tıklayarak çalıştırabilirsiniz. Karşısına AESCryptor GUI ekranı gelecektir. Şimdilik beta durumunda, hatalar olabilir. Bildirirseniz sevinirim.
 
+![How To Work](https://raw.githubusercontent.com/coderistan/AEScryptor/master/gui.png)
+
 Kütüphane normal boyutlu dosyalarda(1 GB altında) gayet düzgün çalışıyor. Ancak çok yüksek boyutlu dosyalarda kasma olabilir. Şifrelediğiniz veya çözümlediğiniz dosyayı başka bir isimle kaydetmeniz tavsiye olunur...
 
 Kullanımdan oluşacak aksi durumlardan sorumlu değilim, zira güvenlik önlemleri kullanıcının kendisine aittir. Faydalı olması dileğiyle :)
