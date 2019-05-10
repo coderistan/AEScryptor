@@ -533,13 +533,39 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         System.gc();
     }
 
+    public void allLock() {
+        this.baslaButon.setEnabled(false);
+        this.hedefButon.setEnabled(false);
+        this.kaynakButon.setEnabled(false);
+        this.clearList.setEnabled(false);
+        this.dosyaSifre.setEnabled(false);
+        this.islenecekDosyalar.setEnabled(false);
+        this.enMode.setEnabled(false);
+        this.deMode.setEnabled(false);
+        this.dosyaUzanti.setEnabled(false);
+        this.kayitDizin.setEnabled(false);
+    }
+
+    public void allRelease() {
+        this.baslaButon.setEnabled(true);
+        this.hedefButon.setEnabled(true);
+        this.kaynakButon.setEnabled(true);
+        this.clearList.setEnabled(true);
+        this.dosyaSifre.setEnabled(true);
+        this.islenecekDosyalar.setEnabled(true);
+        this.enMode.setEnabled(true);
+        this.deMode.setEnabled(true);
+        this.dosyaUzanti.setEnabled(true);
+        this.kayitDizin.setEnabled(true);
+    }
+
     @Override
     public void run() {
         try {
             // Bu Thread, diğer Thread'leri kontrol edecek
             // aynı zamanda yaşayıp yaşamadıklarını kontrol edecek
 
-            baslaButon.setEnabled(false);
+            this.allLock();
             key = new AESkey((dosyaSifre.getText() == null) ? AESkey.random : dosyaSifre.getText());
 
             works.clear();
@@ -547,31 +573,43 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                 works.add(dosyalar.get(i).getAbsolutePath());
             }
 
-            Thread[] worker = new Thread[4];
+            Worker[] worker = new Worker[(dosyalar.size() < 4) ? dosyalar.size() : 4];
+
             for (int i = 0; i < worker.length; i++) {
-                worker[i] = new Thread(new Worker(works, hedef, this.dosyaUzanti.getText(), key, (enMode.isSelected()) ? 0 : 1, i));
+                worker[i] = new Worker(works, hedef, this.dosyaUzanti.getText(), key, (enMode.isSelected()) ? 0 : 1);
                 worker[i].start();
             }
 
             // Buradan itibaren Thread'lerin yaşamı kontrol edilecek
             ArrayList dieThread = new ArrayList();
+            int completed = 0;
 
             while (dieThread.size() < worker.length) {
-                jProgressBar1.setValue(100 - works.size() * 100 / dosyalar.size() - 1);
+                completed = 0;
 
-                for (Thread t : worker) {
+                for (Worker t : worker) {
                     if (!t.isAlive()) {
                         if (!dieThread.contains(t)) {
                             dieThread.add(t);
                         }
+
                     }
+
+                    completed += t.getCompleted();
                 }
+
+                if (dosyalar.size() < 4) {
+                    jProgressBar1.setValue(completed / worker.length);
+                } else {
+                    jProgressBar1.setValue(100 - works.size() * 100 / dosyalar.size() - 1);
+                }
+
                 Thread.sleep(50);
             }
 
             jProgressBar1.setValue(100);
             this.clearAll();
-            baslaButon.setEnabled(true);
+            this.allRelease();
 
         } catch (Exception ex) {
             baslaButon.setEnabled(false);

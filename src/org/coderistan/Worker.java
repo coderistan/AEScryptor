@@ -8,25 +8,37 @@ package org.coderistan;
 import java.io.File;
 import java.util.Queue;
 
-class Worker implements Runnable {
+class Worker extends Thread {
 
     private boolean flag;
-    private Queue<String> work;
+    private Queue<String> works;
     private String sourceFile;
     private String destFile;
     private String extend;
     private Cryptor chiper;
     private int chipMode;
-    private int threadNo;
+    private int completed;
 
-    public Worker(Queue work, String destFile, String extend, AESkey key, int chipMode, int threadNo) throws Exception {
+    public Worker(Queue works, String destFile, String extend, AESkey key, int chipMode) throws Exception {
         this.flag = true;
-        this.work = work;
+        this.works = works;
         this.destFile = destFile;
         this.extend = extend.replace(".", "");
         this.chiper = new Cryptor(key);
         this.chipMode = chipMode;
-        this.threadNo = threadNo;
+
+        this.chiper.addListener(new AesListener() {
+            @Override
+            public void onStart() {}
+
+            @Override
+            public void onWrite(int rate) {
+                setCompleted(rate);
+            }
+
+            @Override
+            public void onFinish(long endTime) {}
+        });
     }
 
     public void setFlag(boolean flag) {
@@ -37,14 +49,22 @@ class Worker implements Runnable {
         return this.flag;
     }
 
+    public int getCompleted() {
+        return completed;
+    }
+    
+    private void setCompleted(int value){
+        this.completed = value;
+    }
+
     @Override
     public void run() {
         while (flag) {
-            synchronized (work) {
-                if (work.isEmpty()) {
+            synchronized (works) {
+                if (works.isEmpty()) {
                     break;
                 }
-                sourceFile = work.remove();
+                sourceFile = works.remove();
             }
 
             File s = new File(sourceFile);
@@ -56,7 +76,7 @@ class Worker implements Runnable {
                     break;
                 case 1:
                     // decode mode
-                    this.chiper.decryptFile(sourceFile, destFile + File.separator + s.getName().replace("."+extend,""));
+                    this.chiper.decryptFile(sourceFile, destFile + File.separator + s.getName().replace("." + extend, ""));
                     break;
             }
 
