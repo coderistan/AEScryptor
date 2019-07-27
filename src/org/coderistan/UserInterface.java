@@ -22,6 +22,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import net.iharder.dnd.FileDrop;
 
 class ListDelete implements KeyListener {
 
@@ -60,11 +61,11 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
 
     public UserInterface() {
         try {
-            this.setTheme("Nimbus");
+            this.setTheme("Metal");
 
             initComponents();
 
-            this.key = new AESkey((dosyaSifre.getText() != null) ? dosyaSifre.getText() : AESkey.random);
+            this.key = new AESkey((dosyaSifre.getPassword() != null) ? new String(dosyaSifre.getPassword()) : AESkey.random);
             this.getContentPane().setBackground(Color.WHITE);
             this.dosyalar = new DefaultListModel<>();
 
@@ -72,10 +73,31 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             islenecekDosyalar.setModel(this.dosyalar);
             islenecekDosyalar.addKeyListener(new ListDelete());
 
+            new FileDrop(islenecekDosyalar, new FileDrop.Listener() {
+                @Override
+                public void filesDropped(File[] files) {
+                    addFilesToPanel(files);
+                }
+            });
+
         } catch (Exception ex) {
             Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    private void addFilesToPanel(File[] files) {
+        isimler.clear();
+        for (int i = 0; i < dosyalar.size(); i++) {
+            isimler.add(dosyalar.get(i).toString());
+        }
+
+        for (File f : files) {
+            if (isimler.contains(f.toString())) {
+                continue;
+            }
+            dosyalar.addElement(f);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -99,11 +121,12 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         jPanel4 = new javax.swing.JPanel();
         dosyaUzanti = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        dosyaSifre = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         enMode = new javax.swing.JRadioButton();
         deMode = new javax.swing.JRadioButton();
+        dosyaSifre = new javax.swing.JPasswordField();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AESCryptor GUI");
@@ -112,7 +135,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         kaynakButon.setBackground(new java.awt.Color(0, 153, 204));
-        kaynakButon.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        kaynakButon.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         kaynakButon.setForeground(new java.awt.Color(255, 255, 255));
         kaynakButon.setText("Seç");
         kaynakButon.setBorder(null);
@@ -130,10 +153,11 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        islenecekDosyalar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jScrollPane1.setViewportView(islenecekDosyalar);
 
         clearList.setBackground(new java.awt.Color(0, 153, 204));
-        clearList.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        clearList.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         clearList.setForeground(new java.awt.Color(255, 255, 255));
         clearList.setText("Temizle");
         clearList.setBorder(null);
@@ -176,7 +200,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         hedefButon.setBackground(new java.awt.Color(0, 153, 204));
-        hedefButon.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        hedefButon.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         hedefButon.setForeground(new java.awt.Color(255, 255, 255));
         hedefButon.setText("Seç");
         hedefButon.setBorder(null);
@@ -194,6 +218,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        kayitDizin.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         kayitDizin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         kayitDizin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -219,16 +244,17 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             .addComponent(hedefButon, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
         );
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         jLabel1.setText("İşlenecek dosya/dosyalar *");
 
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         jLabel2.setText("Kaydedilecek dizin *");
 
         jProgressBar1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 102, 204), 1, true));
         jProgressBar1.setStringPainted(true);
 
         baslaButon.setBackground(new java.awt.Color(0, 153, 204));
+        baslaButon.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         baslaButon.setForeground(new java.awt.Color(255, 255, 255));
         baslaButon.setText("Başlat!");
         baslaButon.setBorder(null);
@@ -246,11 +272,12 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         jLabel4.setText("Dosya uzantısı * ");
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
+        dosyaUzanti.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         dosyaUzanti.setText(".encode");
         dosyaUzanti.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         dosyaUzanti.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -262,24 +289,15 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         jLabel5.setText("Şifreniz");
 
-        dosyaSifre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        dosyaSifre.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                BoxFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextField1FocusLost(evt);
-            }
-        });
-
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
         jLabel3.setText("Mod:");
 
         enMode.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(enMode);
+        enMode.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         enMode.setSelected(true);
         enMode.setText("Encode");
         enMode.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -290,14 +308,16 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
 
         deMode.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(deMode);
+        deMode.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         deMode.setText("Decode");
+
+        dosyaSifre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(dosyaUzanti)
-            .addComponent(dosyaSifre)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
@@ -308,6 +328,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deMode)))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(dosyaSifre)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -315,8 +336,8 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                 .addComponent(dosyaUzanti, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dosyaSifre, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addGap(8, 8, 8)
+                .addComponent(dosyaSifre, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -325,9 +346,14 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                 .addContainerGap())
         );
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 153, 204));
         jLabel6.setText("(?)");
         jLabel6.setToolTipText("Dosya şifrelenirken veya çözümlenirken bu uzantıya göre işlem yapılır");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel7.setText("https://coderistan.blogspot.com");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -345,20 +371,25 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel6)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -420,17 +451,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         fd.setDialogTitle("İşlenecek dosya");
         int secildi = fd.showOpenDialog(this);
         if (secildi == JFileChooser.APPROVE_OPTION) {
-            isimler.clear();
-            for (int i = 0; i < dosyalar.size(); i++) {
-                isimler.add(dosyalar.get(i).toString());
-            }
-
-            for (File f : fd.getSelectedFiles()) {
-                if (isimler.contains(f.toString())) {
-                    continue;
-                }
-                dosyalar.addElement(f);
-            }
+            addFilesToPanel(fd.getSelectedFiles());
         }
         kaynakButon.setEnabled(true);
     }//GEN-LAST:event_kaynakButonActionPerformed
@@ -488,7 +509,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton clearList;
     private javax.swing.JRadioButton deMode;
-    private javax.swing.JTextField dosyaSifre;
+    private javax.swing.JPasswordField dosyaSifre;
     private javax.swing.JTextField dosyaUzanti;
     private javax.swing.JRadioButton enMode;
     private javax.swing.JButton hedefButon;
@@ -499,6 +520,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

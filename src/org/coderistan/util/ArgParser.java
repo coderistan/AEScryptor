@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 /**
  * Argument parser by coderistan
+ * demo version
  */
 
 public class ArgParser {
@@ -64,16 +65,4 @@ public class ArgParser {
         }
     }
 
-    public static void main(String[] args) {
-        
-        ArgParser a = new ArgParser();
-
-        a.addOption("anahtar", "Dosyaları şifrelerken ve çözümlerken kullanmak istediğiniz anahtar");
-        a.addOption("mod", "Dosyaları şifreleme ve çözümleme");
-        a.addOption("kaynak","Şifrelenecek veya çözümlenecek dosya yolu(tam adres)");
-        a.addOption("hedef","Çıktı dosyasının kaydedileceği adres(dosya adı ile birlikte)");
-        
-        
-        
-    }
 }

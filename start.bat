@@ -1,1 +1,1 @@
-start
+java -jar dist/AESCryptor.jar

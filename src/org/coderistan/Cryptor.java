@@ -30,7 +30,7 @@ public class Cryptor {
 
     private AESkey key;
     private AESkey dfault;
-    private byte[] buffer = new byte[4096];
+    private byte[] buffer = new byte[8*1024];
     private int length;
     private Cipher encryptCipher;
     private AesListener listener = null;
