@@ -30,15 +30,16 @@ public class Cryptor {
 
     private AESkey key;
     private AESkey dfault;
-    private byte[] buffer = new byte[8*1024];
+    private byte[] buffer = new byte[8 * 1024];
     private int length;
     private Cipher encryptCipher;
     private AesListener listener = null;
+    private Worker parent;
 
-    public Cryptor(AESkey key) throws Exception {
+    public Cryptor(Worker parent, AESkey key) throws Exception {
         try {
             this.encryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-
+            this.parent = (parent == null) ? new Worker(null, null, null, null, -1) : parent;
             this.dfault = new AESkey("123456789abcdefg");
             this.key = (key != null) ? key : this.dfault; // null olarak belirlenirse, default anahtar kullanılır
         } catch (NoSuchAlgorithmException ex) {
@@ -74,11 +75,14 @@ public class Cryptor {
             CipherOutputStream cos = new CipherOutputStream(os, this.encryptCipher);
 
             while ((length = is.read(this.buffer)) > 0) {
-                cos.write(buffer, 0, length);
-                temp += length;
-                int rate = (int) ((100 * temp) / inFile.length());
-                this.writeListenerRate(rate);
-
+                if (this.parent.getRunnable()) {
+                    cos.write(buffer, 0, length);
+                    temp += length;
+                    int rate = (int) ((100 * temp) / inFile.length());
+                    this.writeListenerRate(rate);
+                } else {
+                    Thread.sleep(100);
+                }
             }
 
             is.close();
@@ -103,6 +107,10 @@ public class Cryptor {
             return false;
         } catch (InvalidAlgorithmParameterException ex) {
             ex.printStackTrace();
+
+            return false;
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Cryptor.class.getName()).log(Level.SEVERE, null, ex);
 
             return false;
         }
@@ -131,19 +139,27 @@ public class Cryptor {
             float temp = 0;
 
             while ((length = cis.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-                temp += length;
-                int rate = (int) ((100 * temp) / inFile.length());
-                this.writeListenerRate(rate);
+                if (this.parent.getRunnable()) {
+                    os.write(buffer, 0, length);
+                    temp += length;
+                    int rate = (int) ((100 * temp) / inFile.length());
+                    this.writeListenerRate(rate);
+                }else{
+                    System.out.println("[-] Deleting file: "+outFile.getName());
+                    
+                    outFile.deleteOnExit();
+                    break;
+                }
+
             }
 
             cis.close();
             os.flush();
             os.close();
-            
+
             long endTime = System.currentTimeMillis() - startTime;
             this.writeListenerFinish(endTime);
-            
+
             return true;
         } catch (Exception e) {
             System.out.println("Hata");

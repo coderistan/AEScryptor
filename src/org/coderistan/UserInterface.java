@@ -8,6 +8,8 @@ package org.coderistan;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -58,12 +61,61 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
     private ArrayList isimler = new ArrayList();
     private AESkey key;
     private Queue<String> works = new LinkedList();
+    private boolean program_start = false;
+    private Worker[] worker;
 
     public UserInterface() {
         try {
             this.setTheme("Metal");
 
             initComponents();
+            this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            this.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    if (program_start) {
+                        if (JOptionPane.showConfirmDialog(null,
+                                "İşleminiz sona erecek", "Emin misiniz?",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                            stopProcess();
+                            System.exit(0);
+                        }
+                    }else{
+                        System.exit(0);
+                    }
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowIconified(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowActivated(WindowEvent e) {
+
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+
+                }
+            });
 
             this.key = new AESkey((dosyaSifre.getPassword() != null) ? new String(dosyaSifre.getPassword()) : AESkey.random);
             this.getContentPane().setBackground(Color.WHITE);
@@ -98,6 +150,15 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             }
             dosyalar.addElement(f);
         }
+    }
+
+    public void stopProcess() {
+        for (Worker w : worker) {
+            w.setRunnable(false);
+        }
+        program_start = false;
+        this.allRelease();
+        this.jProgressBar1.setValue(0);
     }
 
     @SuppressWarnings("unchecked")
@@ -179,13 +240,12 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(kaynakButon, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(330, 330, 330)
-                .addComponent(clearList, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(kaynakButon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clearList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,11 +319,11 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         baslaButon.setText("Başlat!");
         baslaButon.setBorder(null);
         baslaButon.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                ButonMouseEntered(evt);
-            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 ButonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                ButonMouseEntered(evt);
             }
         });
         baslaButon.addActionListener(new java.awt.event.ActionListener() {
@@ -312,6 +372,14 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         deMode.setText("Decode");
 
         dosyaSifre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        dosyaSifre.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                BoxFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField1FocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -429,21 +497,6 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
         buton.setBackground(c);
     }//GEN-LAST:event_ButonMouseExited
 
-    private void baslaButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baslaButonActionPerformed
-        if (hedef != null && dosyaUzanti.getText() != null) {
-            baslaButon.setEnabled(false);
-
-            Thread kontrolThread = new Thread(this);
-            kontrolThread.setDaemon(true);
-
-            kontrolThread.start();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Boş alan bırakmayın", "Hata", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }//GEN-LAST:event_baslaButonActionPerformed
-
     private void kaynakButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kaynakButonActionPerformed
         kaynakButon.setEnabled(false);
         JFileChooser fd = new JFileChooser();
@@ -483,6 +536,39 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
     private void enModeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_enModeFocusGained
 
     }//GEN-LAST:event_enModeFocusGained
+
+    private void baslaButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baslaButonActionPerformed
+        if (hedef != null && dosyaUzanti.getText() != null) {
+            if (program_start) {
+                for (Worker w : worker) {
+                    w.setWait(true);
+                }
+                if (JOptionPane.showConfirmDialog(null,
+                        "İşleminiz sona erecek", "Emin misiniz?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+
+                    stopProcess();
+                } else {
+
+                    for (Worker w : worker) {
+                        w.setWait(false);
+                    }
+                }
+
+            } else {
+                program_start = true;
+
+                Thread kontrolThread = new Thread(this);
+                kontrolThread.setDaemon(true);
+
+                kontrolThread.start();
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Boş alan bırakmayın", "Hata", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_baslaButonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -556,7 +642,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
     }
 
     public void allLock() {
-        this.baslaButon.setEnabled(false);
+        this.baslaButon.setText("Durdur");
         this.hedefButon.setEnabled(false);
         this.kaynakButon.setEnabled(false);
         this.clearList.setEnabled(false);
@@ -569,7 +655,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
     }
 
     public void allRelease() {
-        this.baslaButon.setEnabled(true);
+        this.baslaButon.setText("Başla");
         this.hedefButon.setEnabled(true);
         this.kaynakButon.setEnabled(true);
         this.clearList.setEnabled(true);
@@ -588,7 +674,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             // aynı zamanda yaşayıp yaşamadıklarını kontrol edecek
 
             this.allLock();
-            
+
             int threadNumber = (dosyalar.size() < 4) ? dosyalar.size() : 4;
             key = new AESkey((dosyaSifre.getText() == null) ? AESkey.random : dosyaSifre.getText());
 
@@ -597,7 +683,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                 works.add(dosyalar.get(i).getAbsolutePath());
             }
 
-            Worker[] worker = new Worker[threadNumber];
+            worker = new Worker[threadNumber];
 
             for (int i = 0; i < worker.length; i++) {
                 worker[i] = new Worker(works, hedef, this.dosyaUzanti.getText(), key, (enMode.isSelected()) ? 0 : 1);

@@ -18,13 +18,16 @@ class Worker extends Thread {
     private Cryptor chiper;
     private int chipMode;
     private int completed;
+    private boolean isRunnable = true,wait=false;
 
+    
+    
     public Worker(Queue works, String destFile, String extend, AESkey key, int chipMode) throws Exception {
         this.flag = true;
         this.works = works;
         this.destFile = destFile;
         this.extend = extend.replace(".", "");
-        this.chiper = new Cryptor(key);
+        this.chiper = new Cryptor(this,key);
         this.chipMode = chipMode;
 
         this.chiper.addListener(new AesListener() {
@@ -41,6 +44,16 @@ class Worker extends Thread {
         });
     }
 
+    public boolean isWait() {
+        return wait;
+    }
+
+    public void setWait(boolean wait) {
+        this.wait = wait;
+    }
+
+    
+    
     public void setFlag(boolean flag) {
         this.flag = flag;
     }
@@ -52,6 +65,15 @@ class Worker extends Thread {
     public int getCompleted() {
         return completed;
     }
+
+    public boolean getRunnable() {
+        return isRunnable;
+    }
+
+    public void setRunnable(boolean value) {
+        this.isRunnable = value;
+    }
+    
     
     private void setCompleted(int value){
         this.completed = value;
@@ -60,6 +82,14 @@ class Worker extends Thread {
     @Override
     public void run() {
         while (flag) {
+            if(!isRunnable){
+                break;
+            }
+            if(wait){
+                System.out.println("Beklemede...");
+                continue;
+            }
+            
             synchronized (works) {
                 if (works.isEmpty()) {
                     break;

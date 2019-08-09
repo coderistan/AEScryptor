@@ -12,7 +12,7 @@ public class main {
             String hedef = args[3];
             
             AESkey key = new AESkey(anahtar);
-            Cryptor c = new Cryptor(key);
+            Cryptor c = new Cryptor(null,key);
             
             c.addListener(new AesListener() {
                 @Override
