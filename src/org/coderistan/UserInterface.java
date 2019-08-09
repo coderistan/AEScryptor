@@ -588,6 +588,8 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             // aynı zamanda yaşayıp yaşamadıklarını kontrol edecek
 
             this.allLock();
+            
+            int threadNumber = (dosyalar.size() < 4) ? dosyalar.size() : 4;
             key = new AESkey((dosyaSifre.getText() == null) ? AESkey.random : dosyaSifre.getText());
 
             works.clear();
@@ -595,7 +597,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                 works.add(dosyalar.get(i).getAbsolutePath());
             }
 
-            Worker[] worker = new Worker[(dosyalar.size() < 4) ? dosyalar.size() : 4];
+            Worker[] worker = new Worker[threadNumber];
 
             for (int i = 0; i < worker.length; i++) {
                 worker[i] = new Worker(works, hedef, this.dosyaUzanti.getText(), key, (enMode.isSelected()) ? 0 : 1);
@@ -614,19 +616,18 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                         if (!dieThread.contains(t)) {
                             dieThread.add(t);
                         }
-
                     }
 
                     completed += t.getCompleted();
                 }
 
-                if (dosyalar.size() < 4) {
+                if (dosyalar.size() < threadNumber) {
                     jProgressBar1.setValue(completed / worker.length);
                 } else {
                     jProgressBar1.setValue(100 - works.size() * 100 / dosyalar.size() - 1);
                 }
 
-                Thread.sleep(50);
+                Thread.sleep(100);
             }
 
             jProgressBar1.setValue(100);
@@ -634,7 +635,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             this.allRelease();
 
         } catch (Exception ex) {
-            baslaButon.setEnabled(false);
+            this.allRelease();
             System.out.println("[-] " + ex);
         }
 
