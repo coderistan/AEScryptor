@@ -86,7 +86,6 @@ class Worker extends Thread {
                 break;
             }
             if(wait){
-                System.out.println("Beklemede...");
                 continue;
             }
             
