@@ -717,8 +717,8 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
             }
 
             jProgressBar1.setValue(100);
+            stopProcess();
             this.clearAll();
-            this.allRelease();
 
         } catch (Exception ex) {
             this.allRelease();
