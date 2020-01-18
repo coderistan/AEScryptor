@@ -538,7 +538,8 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_enModeFocusGained
 
     private void baslaButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baslaButonActionPerformed
-        if (hedef != null && dosyaUzanti.getText() != null) {
+        if ((kayitDizin.getText() != null && new File(kayitDizin.getText()).exists()) && dosyaUzanti.getText() != null) {
+            
             if (program_start) {
                 for (Worker w : worker) {
                     w.setWait(true);
@@ -557,6 +558,7 @@ public class UserInterface extends javax.swing.JFrame implements Runnable {
                 }
 
             } else {
+                hedef = kayitDizin.getText();
                 program_start = true;
 
                 Thread kontrolThread = new Thread(this);
